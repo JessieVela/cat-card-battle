@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { CardPack, CatCard } from '@/types/game'
+import type { CardPack, CatCard, TheCatApiImage } from '@/types/game'
 import CatCardItem from '@/components/game/CatCardItem.vue'
 
 defineProps<{
@@ -10,28 +10,50 @@ defineProps<{
 const cards = ref<CatCard[]>([])
 const showCards = ref(false)
 
-// Generate random cards based on pack
-const generateCards = (): CatCard[] => {
-  const catNames = [
-    'Whiskers',
-    'Shadow',
-    'Luna',
-    'Tiger',
-    'Mittens',
-    'Felix',
-    'Nala',
-    'Simba',
-    'Garfield',
-    'Tom',
-  ]
-  const rarities: Array<'common' | 'rare' | 'epic' | 'legendary'> = [
-    'common',
-    'common',
-    'common',
-    'rare',
-    'epic',
-  ]
+const catNames = [
+  'Whiskers',
+  'Shadow',
+  'Luna',
+  'Tiger',
+  'Mittens',
+  'Felix',
+  'Nala',
+  'Simba',
+  'Garfield',
+  'Tom',
+]
 
+const rarities: Array<'common' | 'rare' | 'epic' | 'legendary'> = [
+  'common',
+  'common',
+  'common',
+  'rare',
+  'epic',
+]
+
+async function fetchCatImages(count: number): Promise<string[]> {
+  const params = new URLSearchParams({
+    limit: String(count),
+    size: 'small',
+    order: 'RAND',
+    mime_types: 'jpg,png',
+  })
+  const headers: Record<string, string> = {}
+  if (import.meta.env.VITE_CAT_API_KEY) {
+    headers['x-api-key'] = import.meta.env.VITE_CAT_API_KEY
+  }
+  const response = await fetch(`https://api.thecatapi.com/v1/images/search?${params.toString()}`, {
+    headers,
+  })
+  if (!response.ok) {
+    throw new Error('Failed to fetch cat images')
+  }
+  const data = (await response.json()) as TheCatApiImage[]
+  return data.map((d) => d.url)
+}
+
+async function generateCards(): Promise<CatCard[]> {
+  const images = await fetchCatImages(5)
   return Array.from({ length: 5 }, (_, i) => {
     const randomName = catNames[Math.floor(Math.random() * catNames.length)]
     return {
@@ -40,16 +62,28 @@ const generateCards = (): CatCard[] => {
       attack: Math.floor(Math.random() * 50) + 20,
       defense: Math.floor(Math.random() * 40) + 10,
       health: Math.floor(Math.random() * 100) + 50,
-      image: '🐱',
+      image: images[i] ?? '',
       rarity: rarities[i % rarities.length],
     }
   })
 }
 
-onMounted(() => {
-  cards.value = generateCards()
+onMounted(async () => {
+  try {
+    cards.value = await generateCards()
+  } catch (e) {
+    // fallback to emoji if API fails
+    cards.value = Array.from({ length: 5 }, (_, i) => ({
+      id: i + 1,
+      name: catNames[Math.floor(Math.random() * catNames.length)],
+      attack: Math.floor(Math.random() * 50) + 20,
+      defense: Math.floor(Math.random() * 40) + 10,
+      health: Math.floor(Math.random() * 100) + 50,
+      image: '🐱',
+      rarity: rarities[i % rarities.length],
+    }))
+  }
 
-  // Stagger card appearance
   setTimeout(() => {
     showCards.value = true
   }, 500)

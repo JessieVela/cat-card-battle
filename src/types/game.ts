@@ -15,3 +15,11 @@ export interface CatCard {
   image: string
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
 }
+
+// TheCatAPI free endpoint response shape
+export interface TheCatApiImage {
+  id: string
+  url: string
+  width: number
+  height: number
+}

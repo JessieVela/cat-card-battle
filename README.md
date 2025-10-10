@@ -55,7 +55,7 @@ npm run dev
 - **State Management**: Pinia
 - **Routing**: Vue Router
 - **Build Tool**: Vite
-- **API**: TheCatAPI (To be implemented)
+- **API**: TheCatAPI
 
 
 ## 🎯 Roadmap
