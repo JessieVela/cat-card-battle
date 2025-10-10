@@ -6,6 +6,13 @@ A fun and interactive cat-themed card battling game built with Vue 3, TypeScript
 ![Vue 3](https://img.shields.io/badge/Vue-3-42b883)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR_SITE_ID/deploy-status)](https://app.netlify.com/sites/cat-card-battle/deploys)
+
+## 🎮 Live Demo
+
+**[Play Now! 🎮](https://cat-card-battle.netlify.app/)**
+
+> ⚠️ **Note**: This project is currently under active development. Some features may be incomplete or in progress. Check the [Roadmap](#-roadmap) below to see what's coming next!
 
 ## 🎮 About
 
@@ -73,43 +80,12 @@ npm run dev
 - **Build Tool**: Vite
 - **API**: TheCatAPI
 
-## 📂 Project Structure
-
-```
-cat-card-battle/
-├── src/
-│   ├── assets/
-│   │   ├── images/
-│   │   │   ├── packs/      # Card pack images
-│   │   │   └── cards/      # Individual card images
-│   │   └── main.css        # Tailwind directives
-│   ├── components/
-│   │   ├── game/           # Game-related components
-│   │   │   ├── CardPackItem.vue
-│   │   │   ├── PackSelection.vue
-│   │   │   ├── CatCardItem.vue
-│   │   │   └── CardReveal.vue
-│   │   └── modals/         # Modal components
-│   │       └── InstructionsModal.vue
-│   ├── types/              # TypeScript type definitions
-│   │   └── game.ts
-│   ├── views/              # Page views
-│   │   └── LandingPage.vue
-│   ├── router/             # Vue Router configuration
-│   ├── App.vue
-│   └── main.ts
-├── .github/
-│   └── PULL_REQUEST_TEMPLATE.md
-├── public/
-├── tailwind.config.js
-├── postcss.config.js
-└── package.json
-```
+````
 
 ## 🎯 Roadmap
 
 - [x] Add card rarity and statistics system
-- [ ] Integrate TheCatAPI for real cat images
+- [x] Integrate TheCatAPI for real cat images
 - [ ] Add battle mechanics and gameplay
 - [ ] Implement card collection system
 - [ ] Add sound effects and music
@@ -141,28 +117,6 @@ We welcome contributions for Hacktoberfest 2025! Here's how you can help:
 
 Please make sure your code follows the project's coding standards and passes all checks.
 
-## 📝 Available Scripts
-
-```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Run type checking
-npm run type-check
-
-# Lint and fix files
-npm run lint
-
-# Format code
-npm run format
-```
-
 ## 🐱 TheCatAPI Integration
 
 This project uses [TheCatAPI](https://thecatapi.com/) to fetch adorable cat images for the cards.
@@ -174,7 +128,7 @@ To use the API:
 
 ```env
 VITE_CAT_API_KEY=your_api_key_here
-```
+````
 
 ## Rarity and Statistics system
 
