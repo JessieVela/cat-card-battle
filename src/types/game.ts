@@ -1,3 +1,16 @@
+export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
+
+export type Stat = 'attack' | 'defense' | 'health'
+
+export type Stats = Record<Stat, number>
+
+export type StatsRange = Record<Stat, [number, number]>
+
+export interface CardData {
+  weight: number
+  stats: StatsRange
+}
+
 export interface CardPack {
   id: number
   name: string
@@ -9,9 +22,7 @@ export interface CardPack {
 export interface CatCard {
   id: number
   name: string
-  attack: number
-  defense: number
-  health: number
   image: string
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+  rarity: Rarity
+  stats: Stats
 }

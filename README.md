@@ -10,6 +10,7 @@ A fun and interactive cat-themed card battling game built with Vue 3, TypeScript
 ## 🎮 About
 
 Cat Card Battle is an engaging card game where players:
+
 - 🎴 Choose from three unique card packs (Mystic, Warrior, Shadow)
 - ✨ Unpack 5 random cat cards with beautiful animations
 - ⚔️ Battle with cats featuring real images from TheCatAPI
@@ -36,11 +37,13 @@ Cat Card Battle is an engaging card game where players:
 1. Clone the repository:
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -57,9 +60,9 @@ npm run dev
 - **Build Tool**: Vite
 - **API**: TheCatAPI (To be implemented)
 
-
 ## 🎯 Roadmap
 
+- [x] Add card rarity and statistics system
 - [ ] Integrate TheCatAPI for real cat images
 - [ ] Add battle mechanics and gameplay
 - [ ] Implement card collection system
@@ -92,17 +95,42 @@ We welcome contributions for Hacktoberfest 2025! Here's how you can help:
 
 Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a PR.
 
-
 ## 🐱 TheCatAPI Integration
 
 This project uses [TheCatAPI](https://thecatapi.com/) to fetch adorable cat images for the cards.
 
 To use the API:
+
 1. Get a free API key from [TheCatAPI](https://thecatapi.com/signup)
 2. Create a `.env` file in the root directory:
+
 ```env
 VITE_CAT_API_KEY=your_api_key_here
 ```
+
+## Rarity and Statistics system
+
+To draw a random rarity and statistics use `game/stats.ts` module with `drawRarity` and `drawStatistics` respectively.Generated using weighted algorithm with `Math.random()` method.
+
+### Usage
+
+```ts
+drawRarity() -> Rarity
+```
+
+```ts
+drawRarity(rarity: Rarity) -> Stats
+```
+
+### Rarity chart with Statistics
+
+| Name      | Chance | ATK        | DEF        | HP           |
+| --------- | ------ | ---------- | ---------- | ------------ |
+| Common    | 60%    | 3-8 (6)    | 3-7 (5)    | 19-24 (22)   |
+| Uncommon  | 25%    | 6-12 (9)   | 4-8 (6)    | 27-53 (40)   |
+| Rare      | 10%    | 10-16 (13) | 6-10 (8)   | 32-81 (57)   |
+| Epic      | 4%     | 16-23 (20) | 9-13 (11)  | 55-116 (86)  |
+| Legendary | 1%     | 24-29 (27) | 13-19 (16) | 73-145 (109) |
 
 ## 📄 License
 

@@ -1,54 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { CardPack, CatCard } from '@/types/game'
+import type { CardPack } from '@/types/game'
 import CatCardItem from '@/components/game/CatCardItem.vue'
+import { useCards } from '@/composables/cards'
 
 defineProps<{
   pack: CardPack
 }>()
 
-const cards = ref<CatCard[]>([])
+const cards = useCards()
 const showCards = ref(false)
 
-// Generate random cards based on pack
-const generateCards = (): CatCard[] => {
-  const catNames = [
-    'Whiskers',
-    'Shadow',
-    'Luna',
-    'Tiger',
-    'Mittens',
-    'Felix',
-    'Nala',
-    'Simba',
-    'Garfield',
-    'Tom',
-  ]
-  const rarities: Array<'common' | 'rare' | 'epic' | 'legendary'> = [
-    'common',
-    'common',
-    'common',
-    'rare',
-    'epic',
-  ]
-
-  return Array.from({ length: 5 }, (_, i) => {
-    const randomName = catNames[Math.floor(Math.random() * catNames.length)]
-    return {
-      id: i + 1,
-      name: randomName,
-      attack: Math.floor(Math.random() * 50) + 20,
-      defense: Math.floor(Math.random() * 40) + 10,
-      health: Math.floor(Math.random() * 100) + 50,
-      image: '🐱',
-      rarity: rarities[i % rarities.length],
-    }
-  })
-}
-
 onMounted(() => {
-  cards.value = generateCards()
-
   // Stagger card appearance
   setTimeout(() => {
     showCards.value = true

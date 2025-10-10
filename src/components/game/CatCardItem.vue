@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CatCard } from '@/types/game'
+import type { CatCard, Rarity } from '@/types/game'
 
 defineProps<{
   card: CatCard
@@ -7,17 +7,19 @@ defineProps<{
 
 const rarityColors = {
   common: 'from-gray-400 to-gray-600',
+  uncommon: 'from-green-400 to-green-600',
   rare: 'from-blue-400 to-blue-600',
   epic: 'from-purple-400 to-purple-600',
   legendary: 'from-yellow-400 to-orange-600',
-}
+} satisfies Record<Rarity, string>
 
 const rarityGlow = {
   common: 'shadow-gray-500/50',
+  uncommon: 'shadow-green-500/50',
   rare: 'shadow-blue-500/50',
   epic: 'shadow-purple-500/50',
   legendary: 'shadow-yellow-500/50',
-}
+} satisfies Record<Rarity, string>
 </script>
 
 <template>
@@ -43,15 +45,15 @@ const rarityGlow = {
     <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 space-y-2">
       <div class="flex justify-between items-center">
         <span class="text-white font-semibold">⚔️ Attack:</span>
-        <span class="text-white font-bold">{{ card.attack }}</span>
+        <span class="text-white font-bold">{{ card.stats.attack }}</span>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-white font-semibold">🛡️ Defense:</span>
-        <span class="text-white font-bold">{{ card.defense }}</span>
+        <span class="text-white font-bold">{{ card.stats.defense }}</span>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-white font-semibold">❤️ Health:</span>
-        <span class="text-white font-bold">{{ card.health }}</span>
+        <span class="text-white font-bold">{{ card.stats.health }}</span>
       </div>
     </div>
   </div>
