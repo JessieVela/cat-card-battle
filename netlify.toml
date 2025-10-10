@@ -1,0 +1,9 @@
+# Netlify configuration
+[build]
+  command = "npm run build-only"
+  publish = "dist"
+
+# Allow VITE_CAT_API_KEY to be in the build output
+# This is safe because TheCatAPI keys are designed for client-side use
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "VITE_CAT_API_KEY"

@@ -29,12 +29,17 @@ Cat Card Battle is an engaging card game where players:
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
+- Node.js (v20.19.0 or higher, or v22.12.0+)
 - npm or pnpm
 
 ### Installation
 
 1. Clone the repository:
+
+```bash
+git clone https://github.com/JessieVela/cat-card-battle.git
+cd cat-card-battle
+```
 
 2. Install dependencies:
 
@@ -42,13 +47,21 @@ Cat Card Battle is an engaging card game where players:
 npm install
 ```
 
-3. Run the development server:
+3. Create a `.env` file in the root directory:
+
+```env
+VITE_CAT_API_KEY=your_api_key_here
+```
+
+Get a free API key from [TheCatAPI](https://thecatapi.com/signup)
+
+4. Run the development server:
 
 ```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+5. Open your browser and navigate to `http://localhost:5173`
 
 ## 🛠️ Tech Stack
 
@@ -58,7 +71,40 @@ npm run dev
 - **State Management**: Pinia
 - **Routing**: Vue Router
 - **Build Tool**: Vite
-- **API**: TheCatAPI (To be implemented)
+- **API**: TheCatAPI
+
+## 📂 Project Structure
+
+```
+cat-card-battle/
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   │   ├── packs/      # Card pack images
+│   │   │   └── cards/      # Individual card images
+│   │   └── main.css        # Tailwind directives
+│   ├── components/
+│   │   ├── game/           # Game-related components
+│   │   │   ├── CardPackItem.vue
+│   │   │   ├── PackSelection.vue
+│   │   │   ├── CatCardItem.vue
+│   │   │   └── CardReveal.vue
+│   │   └── modals/         # Modal components
+│   │       └── InstructionsModal.vue
+│   ├── types/              # TypeScript type definitions
+│   │   └── game.ts
+│   ├── views/              # Page views
+│   │   └── LandingPage.vue
+│   ├── router/             # Vue Router configuration
+│   ├── App.vue
+│   └── main.ts
+├── .github/
+│   └── PULL_REQUEST_TEMPLATE.md
+├── public/
+├── tailwind.config.js
+├── postcss.config.js
+└── package.json
+```
 
 ## 🎯 Roadmap
 
@@ -93,7 +139,29 @@ We welcome contributions for Hacktoberfest 2025! Here's how you can help:
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request using our [PR template](.github/PULL_REQUEST_TEMPLATE.md)
 
-Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a PR.
+Please make sure your code follows the project's coding standards and passes all checks.
+
+## 📝 Available Scripts
+
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Run type checking
+npm run type-check
+
+# Lint and fix files
+npm run lint
+
+# Format code
+npm run format
+```
 
 ## 🐱 TheCatAPI Integration
 
@@ -132,6 +200,8 @@ drawRarity(rarity: Rarity) -> Stats
 | Epic      | 4%     | 16-23 (20) | 9-13 (11)  | 55-116 (86)  |
 | Legendary | 1%     | 24-29 (27) | 13-19 (16) | 73-145 (109) |
 
+**Note**: Never commit your `.env` file to version control. It's already included in `.gitignore`.
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -141,6 +211,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [TheCatAPI](https://thecatapi.com/) for providing cat images
 - [Hacktoberfest](https://hacktoberfest.com/) for promoting open source
 - All contributors who help make this project better!
+
+## 📬 Contact
+
+Project Link: [https://github.com/JessieVela/cat-card-battle](https://github.com/JessieVela/cat-card-battle)
 
 ---
 
