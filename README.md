@@ -126,7 +126,9 @@ To use the API:
 
 ```env
 VITE_CAT_API_KEY=your_api_key_here
-```
+````
+
+**Note**: Never commit your `.env` file to version control. It's already included in `.gitignore`.
 
 ## Rarity and Statistics system
 

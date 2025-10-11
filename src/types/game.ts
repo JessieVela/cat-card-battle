@@ -33,3 +33,11 @@ export interface TheCatApiImage {
   width: number
   height: number
 }
+
+// TheCatAPI free endpoint response shape
+export interface TheCatApiImage {
+  id: string
+  url: string
+  width: number
+  height: number
+}
