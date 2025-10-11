@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type { CatCard, Rarity } from '@/types/game'
+import { ref } from 'vue'
 
 defineProps<{
   card: CatCard
 }>()
+
+const isImageLoaded = ref(false)
 
 const rarityColors = {
   common: 'from-gray-400 to-gray-600',
@@ -37,8 +40,25 @@ const rarityGlow = {
     </div>
 
     <!-- Card Image -->
-    <div class="bg-white/30 backdrop-blur-sm rounded-lg p-8 mb-4 flex items-center justify-center">
-      <div class="text-8xl">{{ card.image }}</div>
+    <div
+      class="relative bg-white/30 backdrop-blur-sm rounded-lg p-2 mb-4 flex items-center justify-center h-44 overflow-hidden"
+    >
+      <template v-if="card.image && card.image.startsWith('http')">
+        <img
+          :src="card.image"
+          alt="Cat"
+          class="w-full h-full object-cover rounded-md"
+          @load="isImageLoaded = true"
+          @error="isImageLoaded = true"
+        />
+        <div
+          v-show="!isImageLoaded"
+          class="absolute inset-2 animate-pulse bg-white/50 rounded-md"
+        ></div>
+      </template>
+      <template v-else>
+        <div class="text-8xl">{{ card.image || '🐱' }}</div>
+      </template>
     </div>
 
     <!-- Card Stats -->

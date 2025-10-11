@@ -3,10 +3,10 @@ import type { CardData, Rarity, Stats, StatsRange } from '@/types/game'
 // Rarity config for further development
 // prettier-ignore
 export const RARITIES = {
-  common:    { weight: 1, stats: { attack: [3,  8],  defense: [3,  7],  health: [19, 24] }},
-  uncommon:  { weight: 1, stats: { attack: [6,  12], defense: [4,  8],  health: [27, 53] }},
-  rare:      { weight: 1, stats: { attack: [10, 16], defense: [6, 10],  health: [32, 81] }},
-  epic:      { weight: 1,  stats: { attack: [16, 23], defense: [9, 13], health: [55, 116] }},
+  common:    { weight: 60, stats: { attack: [3,  8],  defense: [3,  7],  health: [19, 24] }},
+  uncommon:  { weight: 25, stats: { attack: [6,  12], defense: [4,  8],  health: [27, 53] }},
+  rare:      { weight: 10, stats: { attack: [10, 16], defense: [6, 10],  health: [32, 81] }},
+  epic:      { weight: 4,  stats: { attack: [16, 23], defense: [9, 13], health: [55, 116] }},
   legendary: { weight: 1,  stats: { attack: [24, 29], defense: [13, 19], health: [97, 145] }},
 } as const satisfies Readonly<Record<Rarity, CardData>>;
 

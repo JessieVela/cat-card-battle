@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import type { CardPack } from '@/types/game'
 import CatCardItem from '@/components/game/CatCardItem.vue'
 import { useCards } from '@/composables/cards'
@@ -8,15 +7,7 @@ defineProps<{
   pack: CardPack
 }>()
 
-const cards = useCards()
-const showCards = ref(false)
-
-onMounted(() => {
-  // Stagger card appearance
-  setTimeout(() => {
-    showCards.value = true
-  }, 500)
-})
+const { cards, visible } = useCards()
 </script>
 
 <template>
@@ -32,7 +23,7 @@ onMounted(() => {
       <TransitionGroup name="card">
         <CatCardItem
           v-for="(card, index) in cards"
-          v-show="showCards"
+          v-show="visible"
           :key="card.id"
           :card="card"
           :style="{ transitionDelay: `${index * 100}ms` }"

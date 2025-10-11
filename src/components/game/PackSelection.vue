@@ -1,8 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" async>
 import { ref } from 'vue'
 import type { CardPack } from '@/types/game'
 import CardPackItem from '@/components/game/CardPackItem.vue'
 import CardReveal from '@/components/game/CardReveal.vue'
+import { useCards } from '@/composables/cards'
 
 const packs = ref<CardPack[]>([
   {
@@ -32,11 +33,16 @@ const selectedPack = ref<CardPack | null>(null)
 const isAnimating = ref(false)
 const showCards = ref(false)
 
-const selectPack = (pack: CardPack) => {
-  if (isAnimating.value) return
+const selectPack = async (pack: CardPack) => {
+  if (isAnimating.value) {
+    return
+  }
 
   selectedPack.value = pack
   isAnimating.value = true
+
+  // Preload images for no layout shift
+  useCards().fetchCatImages()
 
   // Wait for shake animation, then show cards
   setTimeout(() => {
