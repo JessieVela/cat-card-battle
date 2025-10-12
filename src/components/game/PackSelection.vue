@@ -66,7 +66,7 @@ const selectPack = async (pack: CardPack) => {
         </div>
 
         <!-- Pack Selection -->
-        <div class="flex flex-wrap justify-center gap-8 px-4">
+        <div class="relative flex flex-wrap justify-center gap-8 px-4">
           <CardPackItem
             v-for="pack in packs"
             :key="pack.id"

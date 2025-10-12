@@ -35,9 +35,10 @@ const shouldCenter = computed(() => {
 <template>
   <div
     :class="[
-      'relative transition-all duration-700 cursor-pointer',
+      //removed the positioning class and transition from here
+      'duration-0 cursor-pointer',
       shouldHide ? 'opacity-0 scale-0' : 'opacity-100 scale-100',
-      shouldCenter ? 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50' : '',
+      shouldCenter ? 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50' : '',
     ]"
     @click="handleClick"
   >
@@ -52,6 +53,7 @@ const shouldCenter = computed(() => {
             left: '50%',
             top: '50%',
             transform: 'translate(-50%, -50%)',
+            opacity: 0,// Added opacity 0 to avoid flash
           }"
         >
           ⭐
@@ -77,10 +79,11 @@ const shouldCenter = computed(() => {
 </template>
 
 <style scoped>
+/* Removed tanslate from shake */
 @keyframes shake {
   0%,
   100% {
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform:  rotate(0deg);
   }
 
   10%,
@@ -88,14 +91,14 @@ const shouldCenter = computed(() => {
   50%,
   70%,
   90% {
-    transform: translate(-50%, -50%) rotate(-5deg);
+    transform:  rotate(-5deg);
   }
 
   20%,
   40%,
   60%,
   80% {
-    transform: translate(-50%, -50%) rotate(5deg);
+    transform:  rotate(5deg);
   }
 }
 
@@ -108,7 +111,7 @@ const shouldCenter = computed(() => {
     transform: translate(-50%, -50%) scale(0);
     opacity: 1;
   }
-
+  
   100% {
     transform: translate(var(--x), var(--y)) scale(1);
     opacity: 0;
