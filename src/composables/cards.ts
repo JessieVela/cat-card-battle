@@ -34,6 +34,7 @@ export function useCards() {
       order: 'RAND',
       mime_types: 'jpg,png',
     })
+
     const headers: Record<string, string> = {}
     if (import.meta.env.VITE_CAT_API_KEY) {
       headers['x-api-key'] = import.meta.env.VITE_CAT_API_KEY
@@ -43,6 +44,7 @@ export function useCards() {
       `https://api.thecatapi.com/v1/images/search?${params.toString()}`,
       { headers },
     )
+
     if (!response.ok) {
       throw new Error('Failed to fetch cat images')
     }
@@ -52,55 +54,47 @@ export function useCards() {
   }
 
   const create = (id: number, forceLegendary = false): CatCard => {
-  const rarity = forceLegendary ? 'legendary' : drawRarity()
-console.log("Created card rarity:", rarity)
+    const rarity = forceLegendary ? 'legendary' : drawRarity()
 
-
-  return {
-    id,
-    name: fetchCatName(),
-    image: images.value[id] ?? '',
-    rarity,
-    stats: drawStats(rarity),
+    return {
+      id,
+      name: fetchCatName(),
+      image: images.value[id] ?? '',
+      rarity,
+      stats: drawStats(rarity),
+    }
   }
-}
 
-
-  //Generate the pack (guarantee legendary if first pack)
+  // Generate the pack (guarantee legendary if first pack)
   const generate = (amount: number): CatCard[] => {
-  const firstPack = !isFirstPackClaimed()
-  const result = Array.from({ length: amount }, (_, id) => create(id))
+    const firstPack = !isFirstPackClaimed()
+    const result = Array.from({ length: amount }, (_, id) => create(id))
 
-  console.log("First pack?", firstPack)
+    // Guarantee one Legendary if it's the first pack
+    if (firstPack && !result.some((c) => c.rarity === 'legendary')) {
+      const randomIndex = Math.floor(Math.random() * result.length)
+      result[randomIndex] = create(randomIndex, true)
+    }
 
-  // Guarantee one Legendary if it's the first pack
-  if (firstPack && !result.some((c) => c.rarity === 'legendary')) {
-    const randomIndex = Math.floor(Math.random() * result.length)
-    result[randomIndex] = create(randomIndex, true)
+    if (firstPack) {
+      claimFirstPack()
+    }
+
+    return result
   }
 
-  // claimFirstPack()
-  if (firstPack) {
-  console.log("🌟 Guaranteed Legendary Pack Triggered!")
-  claimFirstPack()
-  }
-  return result
-  }
-
-
-  //Ensure images are fetched first, then cards are generated
+  // Ensure images are fetched first, then cards are generated
   onMounted(async () => {
-  visible.value = false
-  try {
-    await fetchCatImages()          
-    cards.value = generate(amount) 
-  } catch (err) {
-    console.error('Error generating cards:', err)
-  } finally {
-    setTimeout(() => (visible.value = true), 500)
-  }
-})
-
+    visible.value = false
+    try {
+      await fetchCatImages()
+      cards.value = generate(amount)
+    } catch (err) {
+      // error handled silently
+    } finally {
+      setTimeout(() => (visible.value = true), 500)
+    }
+  })
 
   return {
     cards,
@@ -108,3 +102,4 @@ console.log("Created card rarity:", rarity)
     fetchCatImages,
   }
 }
+

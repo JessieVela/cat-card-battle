@@ -9,4 +9,3 @@ export function isFirstPackClaimed(): boolean {
 export function claimFirstPack(): void {
   firstPackClaimed = true
 }
-
