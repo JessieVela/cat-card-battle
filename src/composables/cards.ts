@@ -50,7 +50,6 @@ export function useCards() {
     }
 
     // Keep fetching until we have exactly amount of valid images
-    // Amount is 5 now
     while (validImages.length < amount) {
       const needed = amount - validImages.length
       // Over-fetch (2x needed, minimum 10) to reduce loops.
