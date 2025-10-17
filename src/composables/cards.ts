@@ -27,17 +27,15 @@ export function useCards() {
     return result[Math.floor(Math.random() * result.length)]!
   }
 
-  // Filter out problematic image hosts that may return placeholder images
+  // This is a filter function
+  // It filters out problematic image hosts that may return placeholder images
   const isValidImageUrl = (url: string): boolean => {
-    const problematicHosts = [
-      'tumblr.com',
-      '64.media.tumblr.com',
-      'static.tumblr.com',
-    ]
+    const problematicHosts = ['tumblr.com', '64.media.tumblr.com', 'static.tumblr.com']
 
     try {
       const urlObj = new URL(url)
-      return !problematicHosts.some(host => urlObj.hostname.includes(host))
+      // Return true when none of the problematic hosts are substrings of the URL hostname
+      return !problematicHosts.some((host) => urlObj.hostname.includes(host))
     } catch {
       return false
     }
@@ -51,10 +49,12 @@ export function useCards() {
       headers['x-api-key'] = import.meta.env.VITE_CAT_API_KEY
     }
 
-    // Keep fetching until we have exactly 5 valid images
+    // Keep fetching until we have exactly amount of valid images
+    // Amount is 5 now
     while (validImages.length < amount) {
       const needed = amount - validImages.length
-      const requestAmount = Math.max(needed * 2, 10) // Request at least 2x what we need, minimum 10
+      // Over-fetch (2× needed, minimum 10) to reduce loops.
+      const requestAmount = Math.max(needed * 2, 10)
 
       const params = new URLSearchParams({
         limit: String(requestAmount),
@@ -75,9 +75,7 @@ export function useCards() {
       const data = (await response.json()) as TheCatApiImage[]
 
       // Filter out problematic URLs
-      const newValidImages = data
-        .map((d) => d.url)
-        .filter(isValidImageUrl)
+      const newValidImages = data.map((d) => d.url).filter(isValidImageUrl)
 
       validImages.push(...newValidImages)
     }
@@ -134,4 +132,3 @@ export function useCards() {
     fetchCatImages,
   }
 }
-
