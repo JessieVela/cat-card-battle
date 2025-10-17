@@ -53,7 +53,7 @@ export function useCards() {
     // Amount is 5 now
     while (validImages.length < amount) {
       const needed = amount - validImages.length
-      // Over-fetch (2× needed, minimum 10) to reduce loops.
+      // Over-fetch (2x needed, minimum 10) to reduce loops.
       const requestAmount = Math.max(needed * 2, 10)
 
       const params = new URLSearchParams({
