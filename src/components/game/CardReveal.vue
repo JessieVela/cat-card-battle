@@ -30,14 +30,14 @@ const handleContinue = () => {
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 max-w-7xl mx-auto">
       <TransitionGroup
         name="card"
-        class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:flex-nowrap"
+        class="flex flex-col sm:flex-row sm:flex-nowrap items-center justify-center gap-4 w-full"
       >
         <CatCardItem
           v-for="(card, index) in cards"
           v-show="visible"
           :key="card.id"
           :card="card"
-          :class="['flex-shrink-0', 'w-full sm:min-w-[160px] sm:max-w-[200px]', 'sm:flex-1']"
+          :class="['flex-shrink-0 sm:flex-shrink', 'w-full sm:w-[180px]']"
           :style="{ transitionDelay: `${index * 100}ms` }"
         />
       </TransitionGroup>
@@ -56,13 +56,6 @@ const handleContinue = () => {
 </template>
 
 <style scoped>
-@media (min-width: 768px) {
-  .sm\:flex-row {
-    flex-wrap: nowrap;
-    justify-content: center;
-  }
-}
-
 .card-enter-active {
   transition: all 0.6s ease;
 }
