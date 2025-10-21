@@ -45,10 +45,8 @@ const selectPack = async (pack: CardPack) => {
   selectedPack.value = pack
   isAnimating.value = true
 
-  // Preload images for no layout shift
-  useCards().fetchCatImages()
-
   // Wait for shake animation, then show cards
+  // Cards will show immediately with placeholders, then load real images
   setTimeout(() => {
     showCards.value = true
   }, 1500)
@@ -75,8 +73,14 @@ const handleContinue = () => {
 
         <!-- Pack Selection -->
         <div class="relative flex flex-wrap justify-center gap-8 px-4">
-          <CardPackItem v-for="pack in packs" :key="pack.id" :pack="pack" :is-selected="selectedPack?.id === pack.id"
-            :is-animating="isAnimating" @select="selectPack" />
+          <CardPackItem
+            v-for="pack in packs"
+            :key="pack.id"
+            :pack="pack"
+            :is-selected="selectedPack?.id === pack.id"
+            :is-animating="isAnimating"
+            @select="selectPack"
+          />
         </div>
       </div>
     </Transition>

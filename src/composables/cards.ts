@@ -2,11 +2,13 @@ import { onMounted, ref } from 'vue'
 import { drawRarity, drawStats } from '@/game/stats'
 import type { CatCard, TheCatApiImage } from '@/types/game'
 import { isFirstPackClaimed, claimFirstPack } from '@/utils/firstPack'
+import placeholderImage from '@/assets/images/placeholder-card.svg'
 
 const amount = 5 as const
 const cards = ref<CatCard[]>([])
 const images = ref<string[]>([])
 const visible = ref(false)
+const imageLoadingStates = ref<boolean[]>(new Array(amount).fill(false))
 
 export function useCards() {
   // Mocking API call for the Cat's name
@@ -88,9 +90,45 @@ export function useCards() {
     return {
       id,
       name: fetchCatName(),
-      image: images.value[id] ?? '',
+      image: placeholderImage, // Start with placeholder
       rarity,
       stats: drawStats(rarity),
+    }
+  }
+
+  const loadImageForCard = async (cardIndex: number): Promise<void> => {
+    if (imageLoadingStates.value[cardIndex] || !images.value[cardIndex]) {
+      return
+    }
+
+    imageLoadingStates.value[cardIndex] = true
+
+    try {
+      // Preload the image to ensure it's ready
+      const img = new Image()
+      await new Promise((resolve, reject) => {
+        img.onload = resolve
+        img.onerror = reject
+        img.src = images.value[cardIndex]
+      })
+
+      // Update the card with the real image
+      if (cards.value[cardIndex]) {
+        cards.value[cardIndex].image = images.value[cardIndex]
+      }
+    } catch (error) {
+      console.warn(`Failed to load image for card ${cardIndex}:`, error)
+    }
+  }
+
+  const loadImagesIncrementally = async (): Promise<void> => {
+    // Load images one by one with a small delay between each
+    for (let i = 0; i < amount; i++) {
+      await loadImageForCard(i)
+      // Small delay between image loads for visual effect
+      if (i < amount - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 300))
+      }
     }
   }
 
@@ -112,16 +150,23 @@ export function useCards() {
     return result
   }
 
-  // Ensure images are fetched first, then cards are generated
+  // Generate cards immediately with placeholders, then load real images
   onMounted(async () => {
     visible.value = false
+
+    // Generate cards immediately with placeholder images
+    cards.value = generate(amount)
+
+    // Show cards with placeholders first
+    setTimeout(() => (visible.value = true), 500)
+
+    // Load real images in the background
     try {
       await fetchCatImages()
-      cards.value = generate(amount)
+      await loadImagesIncrementally()
     } catch (err) {
-      // error handled silently
-    } finally {
-      setTimeout(() => (visible.value = true), 500)
+      console.warn('Failed to load cat images:', err)
+      // Cards will continue showing placeholders if images fail to load
     }
   })
 
@@ -129,5 +174,7 @@ export function useCards() {
     cards,
     visible,
     fetchCatImages,
+    loadImagesIncrementally,
+    imageLoadingStates,
   }
 }

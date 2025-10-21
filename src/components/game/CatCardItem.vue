@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { CatCard, Rarity } from '@/types/game'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import placeholderImage from '@/assets/images/placeholder-card.svg'
 
-defineProps<{
+const props = defineProps<{
   card: CatCard
 }>()
 
 const isImageLoaded = ref(false)
+const isPlaceholder = computed(() => props.card.image === placeholderImage)
 
 const rarityColors = {
   common: 'from-gray-400 to-gray-600',
@@ -43,22 +45,47 @@ const rarityGlow = {
     <div
       class="relative bg-white/30 backdrop-blur-sm rounded-lg p-2 mb-4 flex items-center justify-center h-44 overflow-hidden"
     >
-      <template v-if="card.image && card.image.startsWith('http')">
+      <!-- Placeholder Image -->
+      <Transition name="placeholder-fade">
+        <div
+          v-if="isPlaceholder"
+          key="placeholder"
+          class="absolute inset-2 flex items-center justify-center bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-md"
+        >
+          <img :src="placeholderImage" alt="Loading..." class="w-20 h-20 opacity-80" />
+        </div>
+      </Transition>
+
+      <!-- Real Cat Image -->
+      <Transition name="image-flip">
         <img
+          v-if="!isPlaceholder && card.image && card.image.startsWith('http')"
           :src="card.image"
           alt="Cat"
           class="w-full h-full object-cover rounded-md"
           @load="isImageLoaded = true"
           @error="isImageLoaded = true"
         />
+      </Transition>
+
+      <!-- Fallback for non-HTTP images -->
+      <Transition name="image-flip">
         <div
-          v-show="!isImageLoaded"
-          class="absolute inset-2 animate-pulse bg-white/50 rounded-md"
-        ></div>
-      </template>
-      <template v-else>
-        <div class="text-8xl">{{ card.image || '🐱' }}</div>
-      </template>
+          v-if="!isPlaceholder && card.image && !card.image.startsWith('http')"
+          key="emoji"
+          class="text-8xl"
+        >
+          {{ card.image || '🐱' }}
+        </div>
+      </Transition>
+
+      <!-- Loading overlay for real images -->
+      <div
+        v-if="!isPlaceholder && !isImageLoaded"
+        class="absolute inset-2 animate-pulse bg-white/50 rounded-md flex items-center justify-center"
+      >
+        <div class="text-white/70 text-sm">Loading...</div>
+      </div>
     </div>
 
     <!-- Card Stats -->
@@ -79,4 +106,29 @@ const rarityGlow = {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* Placeholder fade out animation */
+.placeholder-fade-leave-active {
+  transition: all 0.5s ease;
+}
+
+.placeholder-fade-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* Image flip in animation */
+.image-flip-enter-active {
+  transition: all 0.6s ease;
+}
+
+.image-flip-enter-from {
+  opacity: 0;
+  transform: rotateY(90deg) scale(0.8);
+}
+
+.image-flip-enter-to {
+  opacity: 1;
+  transform: rotateY(0deg) scale(1);
+}
+</style>
