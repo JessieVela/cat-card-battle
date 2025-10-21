@@ -16,32 +16,125 @@ let isFetching = false
 let hasFetched = false
 
 const packImages: Record<number, string> = {
-  1: wizardPackImage, // Mystic Pack
-  2: warriorPackImage, // Warrior Pack
-  3: ninjaPackImage, // Shadow Pack
+  1: wizardPackImage,
+  2: warriorPackImage,
+  3: ninjaPackImage,
+}
+
+// Cat name generator function
+const generateCatName = (): string => {
+  const prefixes = [
+    'Captain',
+    'Sir',
+    'Lady',
+    'Doctor',
+    'Professor',
+    'Agent',
+    'Major',
+    'Duchess',
+    'King',
+    'Queen',
+    'Prince',
+    'Princess',
+    'Lord',
+    'Duke',
+    'Count',
+    'Baron',
+    'Shadow',
+    'Midnight',
+    'Storm',
+    'Thunder',
+    'Lightning',
+    'Mystic',
+    'Cosmic',
+    'Silver',
+    'Golden',
+    'Crystal',
+    'Ruby',
+    'Sapphire',
+    'Emerald',
+    'Diamond',
+    'Stealth',
+    'Phantom',
+    'Ghost',
+    'Spirit',
+    'Ancient',
+    'Eternal',
+  ]
+
+  const titles = [
+    'Whisker',
+    'Paw',
+    'Claw',
+    'Tail',
+    'Fang',
+    'Purr',
+    'Meow',
+    'Hiss',
+    'Fluff',
+    'Fuzz',
+    'Pounce',
+    'Dash',
+    'Blaze',
+    'Spark',
+    'Whisper',
+    'Twinkle',
+    'Bean',
+    'Boots',
+    'Mittens',
+    'Socks',
+    'Sneakers',
+    'Jumper',
+    'Hunter',
+    'Leaper',
+    'Springer',
+    'Dancer',
+  ]
+  const usePrefix = Math.random() < 0.5
+
+  if (usePrefix) {
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)]!
+    const title = titles[Math.floor(Math.random() * titles.length)]!
+    return `${prefix} ${title}`
+  } else {
+    const adjectives = [
+      'Fluffy',
+      'Sneaky',
+      'Brave',
+      'Mischievous',
+      'Sleepy',
+      'Sassy',
+      'Curious',
+      'Swift',
+      'Gentle',
+      'Clever',
+      'Royal',
+      'Wild',
+      'Fuzzy',
+      'Grumpy',
+    ]
+    const nouns = [
+      'Paws',
+      'Whiskers',
+      'Tail',
+      'Claw',
+      'Furball',
+      'Shadow',
+      'Storm',
+      'Hunter',
+      'Moon',
+      'Spark',
+      'Snuggle',
+      'Napper',
+    ]
+    const adj = adjectives[Math.floor(Math.random() * adjectives.length)]!
+    const noun = nouns[Math.floor(Math.random() * nouns.length)]!
+    return `${adj} ${noun}`
+  }
 }
 
 export function useCards() {
-  // Mocking API call for the Cat's name
-  const fetchCatName = (): string => {
-    const result = [
-      'Whiskers',
-      'Shadow',
-      'Luna',
-      'Tiger',
-      'Mittens',
-      'Felix',
-      'Nala',
-      'Simba',
-      'Garfield',
-      'Tom',
-    ] satisfies string[]
-
-    return result[Math.floor(Math.random() * result.length)]!
-  }
-
   const fetchCatImages = async (): Promise<void> => {
-    // Prevent duplicate fetches
     if (isFetching || hasFetched) {
       return
     }
@@ -54,7 +147,6 @@ export function useCards() {
     }
 
     try {
-      // Request exactly what we need
       const params = new URLSearchParams({
         limit: String(amount),
         size: 'small',
@@ -79,7 +171,6 @@ export function useCards() {
 
       setTimeout(() => {
         visible.value = true
-        // Start loading images incrementally after cards are visible
         loadImagesIncrementally()
       }, 500)
     } finally {
@@ -92,8 +183,8 @@ export function useCards() {
 
     return {
       id,
-      name: fetchCatName(),
-      image: packImages[selectedPackId.value] || wizardPackImage, // Start with pack placeholder
+      name: generateCatName(), // Using the new name generator
+      image: packImages[selectedPackId.value] || wizardPackImage,
       rarity,
       stats: drawStats(rarity),
     }
@@ -111,7 +202,6 @@ export function useCards() {
     imageLoadingStates.value[cardIndex] = true
 
     try {
-      // Preload the image to ensure it's ready
       const img = new Image()
       await new Promise((resolve, reject) => {
         img.onload = resolve
@@ -119,7 +209,6 @@ export function useCards() {
         img.src = images.value[cardIndex]!
       })
 
-      // Update the card with the real image
       if (cards.value[cardIndex]) {
         cards.value[cardIndex]!.image = images.value[cardIndex]!
       }
@@ -129,22 +218,18 @@ export function useCards() {
   }
 
   const loadImagesIncrementally = async (): Promise<void> => {
-    // Load images one by one with a small delay between each
     for (let i = 0; i < amount; i++) {
       await loadImageForCard(i)
-      // Small delay between image loads for visual effect
       if (i < amount - 1) {
         await new Promise((resolve) => setTimeout(resolve, 300))
       }
     }
   }
 
-  // Generate the pack (guarantee legendary if first pack)
   const generate = (amount: number): CatCard[] => {
     const firstPack = !isFirstPackClaimed()
     const result = Array.from({ length: amount }, (_, id) => create(id))
 
-    // Guarantee one Legendary if it's the first pack
     if (firstPack && !result.some((c) => c.rarity === 'legendary')) {
       const randomIndex = Math.floor(Math.random() * result.length)
       result[randomIndex] = create(randomIndex, true)
